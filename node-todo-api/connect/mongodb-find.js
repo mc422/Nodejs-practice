@@ -7,6 +7,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, client) => {
 	console.log('Connect to MongoDB server.');
 	const db = client.db('TodoApp');
 
+	// handle callback with promise
 	db.collection('Todos').find().toArray().then((docs) => {
 		console.log('Todos');
 		console.log(JSON.stringify(docs, undefined, 2));
