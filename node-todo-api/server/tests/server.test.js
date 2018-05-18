@@ -36,7 +36,7 @@ describe('POST /todos', () => {
       });
 	});
 
-  it('not create on empty text', (done) => {
+  it('should not create on invalid text', (done) => {
     request(app)
       .post('/todos')
       .send({})
