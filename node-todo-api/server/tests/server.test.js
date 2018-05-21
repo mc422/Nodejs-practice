@@ -225,5 +225,5 @@ describe('PATCH /todos/:id', () => {
       })
       .expect(404)
       .end(done);
-  }); 
+  });
 });
