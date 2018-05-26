@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 
-require('./config/config')
+require('./config/config');
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
@@ -90,6 +90,21 @@ app.patch('/todos/:id', (req, res) => {
     res.send({todo});
   }).catch((err) => {
     res.status(400).send();
+  });
+});
+
+
+app.get('/users/me', (req, res) => {
+  var token = req.header('x-auth');
+
+  User.findByToken(token).then((user) => {
+    if (!user) {
+      return Pormise.reject();
+    }
+
+    res.send(user);
+  }).catch((err) => {
+    res.status(401).send();
   });
 });
 
