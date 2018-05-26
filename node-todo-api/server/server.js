@@ -7,6 +7,7 @@ require('./config/config');
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
+var {authenticate} = require('./middleware/authenticate');
 
 const port = process.env.PORT;
 
@@ -94,18 +95,8 @@ app.patch('/todos/:id', (req, res) => {
 });
 
 
-app.get('/users/me', (req, res) => {
-  var token = req.header('x-auth');
-
-  User.findByToken(token).then((user) => {
-    if (!user) {
-      return Pormise.reject();
-    }
-
-    res.send(user);
-  }).catch((err) => {
-    res.status(401).send();
-  });
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user);
 });
 
 app.post('/users', (req, res) => {
