@@ -262,9 +262,7 @@ describe('POST /users', () => {
           expect(docs[0].email).toBe(userJson.email);
           expect(docs[0].password).not.toBe(userJson.password);
           done();
-        }).catch((err) => {
-          return done(err);
-        });
+        }).catch((err) => done(err));
       });
   });
 
@@ -295,4 +293,44 @@ describe('POST /users', () => {
       .expect(400)
       .end(done);    
   })
+});
+
+describe('POST /users/login', () => {
+  it('should login user and create a token', (done) => {
+    request(app)
+      .post('/users/login')
+      .send({
+        email: testUsers[1].email,
+        password: testUsers[1].password
+      })
+      .expect(200)
+      .expect((res) => {
+        expect(res.headers['x-auth']).toBeTruthy();
+      })
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+
+        User.findById(testUsers[1]._id).then((user) => {
+          expect(user.tokens.length).toBe(1);
+          expect(user.toObject().tokens[0]).toMatchObject({
+            access: 'auth',
+            token: res.headers['x-auth']
+          });
+          done();
+        }).catch((e) => done(e));
+      });
+  });
+
+  it('should reject invalid login', (done) => {
+    request(app)
+      .post('/users/login')
+      .send({
+        email: testUsers[1].email,
+        password: 'invalid_pass'
+      })
+      .expect(400)
+      .end(done);
+  });
 });
