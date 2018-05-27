@@ -2,6 +2,7 @@ const {ObjectID} = require('mongodb');
 const jwt = require('jsonwebtoken');
 
 const {Todo} = require('./../../models/todo');
+const {User} = require('./../../models/user');
 
 const testTodos = [
   {
@@ -22,7 +23,7 @@ var populateTodos = (done) => {
   }).then(() => done());
 };
 
-const testUserIds = [new ObjectID()] * 2;
+const testUserIds = [new ObjectID(), new ObjectID()];
 const testUsers = [{
   _id: testUserIds[0],
   email: 'email@test.com',
